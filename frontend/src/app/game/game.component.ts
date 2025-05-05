@@ -30,6 +30,8 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   @ViewChild('gameCanvasContainer') gameContainer!: ElementRef;
   @ViewChild('nameInput') nameInput!: ElementRef;
   
+  isMobileDevice = false;
+
   private scene!: THREE.Scene;
   private camera!: THREE.OrthographicCamera;
   private renderer!: THREE.WebGLRenderer;
@@ -87,6 +89,7 @@ export class GameComponent implements AfterViewInit, OnDestroy {
     private gameService: GameService,
     private appInsights: AppInsightsService
   ) {
+    this.isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     this.loadLeaderboard();
     this.startLeaderboardRefresh();
     // Load saved player name from localStorage
@@ -284,38 +287,71 @@ export class GameComponent implements AfterViewInit, OnDestroy {
   }
 
   private setupControls() {
-    document.addEventListener('keydown', (event) => {
-      if (!this.gameStarted) {
-        this.gameStarted = true;
-        this.startTime = Date.now();
-      }
+    // Only setup keyboard controls for desktop
+    if (!this.isMobileDevice) {
+      document.addEventListener('keydown', (event) => {
+        if (!this.gameStarted) {
+          this.gameStarted = true;
+          this.startTime = Date.now();
+        }
 
-      switch (event.code) {
-        case 'ArrowLeft':
-          this.moveDirection.x = -1;
-          break;
-        case 'ArrowRight':
-          this.moveDirection.x = 1;
-          break;
-        case 'Space':
-          if (!this.isJumping) {
-            this.playerVelocity.y = this.PLAYER_JUMP_FORCE;
-            this.isJumping = true;
-          }
-          break;
-      }
-    });
+        switch (event.code) {
+          case 'ArrowLeft':
+            this.moveDirection.x = -1;
+            break;
+          case 'ArrowRight':
+            this.moveDirection.x = 1;
+            break;
+          case 'Space':
+            if (!this.isJumping) {
+              this.playerVelocity.y = this.PLAYER_JUMP_FORCE;
+              this.isJumping = true;
+            }
+            break;
+        }
+      });
 
-    document.addEventListener('keyup', (event) => {
-      switch (event.code) {
-        case 'ArrowLeft':
-          if (this.moveDirection.x < 0) this.moveDirection.x = 0;
-          break;
-        case 'ArrowRight':
-          if (this.moveDirection.x > 0) this.moveDirection.x = 0;
-          break;
-      }
-    });
+      document.addEventListener('keyup', (event) => {
+        switch (event.code) {
+          case 'ArrowLeft':
+            if (this.moveDirection.x < 0) this.moveDirection.x = 0;
+            break;
+          case 'ArrowRight':
+            if (this.moveDirection.x > 0) this.moveDirection.x = 0;
+            break;
+        }
+      });
+    }
+  }
+
+  // Mobile control methods
+  onMoveRightStart() {
+    if (!this.gameStarted) {
+      this.gameStarted = true;
+      this.startTime = Date.now();
+    }
+    this.moveDirection.x = 1;
+  }
+
+  onMoveRightEnd() {
+    if (this.moveDirection.x > 0) {
+      this.moveDirection.x = 0;
+    }
+  }
+
+  onJumpStart() {
+    if (!this.gameStarted) {
+      this.gameStarted = true;
+      this.startTime = Date.now();
+    }
+    if (!this.isJumping) {
+      this.playerVelocity.y = this.PLAYER_JUMP_FORCE;
+      this.isJumping = true;
+    }
+  }
+
+  onJumpEnd() {
+    // Optional: Add any jump release logic here if needed
   }
 
   private updateMovingPlatforms() {

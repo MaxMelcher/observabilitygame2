@@ -1,4 +1,20 @@
 <div #gameCanvasContainer class="game-container">
+  <!-- Mobile Controls -->
+  <div *ngIf="isMobileDevice" class="mobile-controls">
+    <button 
+      class="control-button move-right-btn" 
+      (touchstart)="onMoveRightStart()"
+      (touchend)="onMoveRightEnd()">
+      →
+    </button>
+    <button 
+      class="control-button jump-btn" 
+      (touchstart)="onJumpStart()"
+      (touchend)="onJumpEnd()">
+      ↑
+    </button>
+  </div>
+
   <!-- Game Instructions -->
   <div class="game-instructions" *ngIf="!gameCompleted">
     <h3>Goal: Get to the Yellow Platform!</h3>

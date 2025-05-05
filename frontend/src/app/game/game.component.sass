@@ -192,3 +192,40 @@
 
     span
       font-size: 14px
+
+.mobile-controls
+  position: fixed
+  bottom: 20px
+  width: 100%
+  pointer-events: none
+  z-index: 1000
+  display: flex
+  justify-content: flex-end
+  padding: 0 20px
+
+.control-button
+  position: relative
+  width: 70px
+  height: 70px
+  border-radius: 50%
+  background: rgba(255, 255, 255, 0.3)
+  border: 2px solid rgba(255, 255, 255, 0.5)
+  color: white
+  font-size: 32px
+  pointer-events: auto
+  user-select: none
+  display: flex
+  align-items: center
+  justify-content: center
+  margin-left: 20px
+  -webkit-tap-highlight-color: transparent
+  
+  &:active
+    background: rgba(255, 255, 255, 0.5)
+    transform: scale(0.95)
+
+  &.move-right-btn
+    background: rgba(52, 152, 219, 0.3)
+    
+  &.jump-btn
+    background: rgba(46, 204, 113, 0.3)
