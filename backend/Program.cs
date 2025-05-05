@@ -100,7 +100,7 @@ app.MapPost("/api/scores", async (GameDbContext db, AzureOpenAIClient openAI, Pl
 
         if (computedHash != score.Hash)
         {
-            logger.LogWarning("Invalid hash detected for score submission: {PlayerName}, Expected: {ExpectedHash}, Got: {ReceivedHash}", 
+            logger.LogWarning("Invalid hash detected for score submission: {PlayerName}, Expected: {ExpectedHash}, Got: {ReceivedHash}",
                 score.PlayerName, computedHash, score.Hash);
             var telemetryProperties = new Dictionary<string, string>
             {
@@ -132,7 +132,7 @@ app.MapPost("/api/scores", async (GameDbContext db, AzureOpenAIClient openAI, Pl
                 { "AttemptType", "InappropriateUsername" }
             };
             telemetryClient.TrackEvent("InappropriateUsernameAttempt", telemetryProperties);
-            
+
             return Results.BadRequest("invalid player name");
         }
 
@@ -149,6 +149,9 @@ app.MapPost("/api/scores", async (GameDbContext db, AzureOpenAIClient openAI, Pl
     }
 })
 .WithName("SubmitScore");
+
+//return 200 on /
+app.MapGet("/", () => "Observability Game API is running!");
 
 app.Run();
 
