@@ -33,7 +33,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'obs-game'
+          app-name: 'obsgame2'
           slot-name: 'Production'
           package: 'App/out'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_D57D8719CD944CB98D03BA35A7CE0B0B }}
