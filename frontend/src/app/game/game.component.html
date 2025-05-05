@@ -1,0 +1,69 @@
+<div #gameCanvasContainer class="game-container">
+  <!-- Game Instructions -->
+  <div class="game-instructions" *ngIf="!gameCompleted">
+    <h3>Goal: Get to the Yellow Platform!</h3>
+    <p>Race against time to reach the goal. Be careful - touching the ground adds a time penalty!</p>
+  </div>
+
+  <!-- Overlay that blocks game interaction when completed -->
+  <div *ngIf="gameCompleted" class="game-overlay">
+    <div class="game-complete-ui">
+      <h2>{{ timeoutOccurred ? 'Time is Up!' : 'Game Complete!' }}</h2>
+      <p *ngIf="timeoutOccurred" class="timeout-message">Sorry, you didn't make it in time!</p>
+      <p>Your time: {{gameTime}}.{{gameTimeMs.toString().padStart(3, '0')}}s</p>
+      <div *ngIf="!scoreSubmitted && !timeoutOccurred">
+        <input #nameInput [(ngModel)]="playerName" maxlength="50"
+               (ngModelChange)="onNameChange($event)"
+               (keyup.enter)="submitScore()"
+               placeholder="Enter your name" data-1p-ignore/>
+        <div *ngIf="errorMessage" class="error-message">{{errorMessage}}</div>
+        <button (click)="submitScore()" [disabled]="isSubmittingScore">
+          {{ isSubmittingScore ? 'Submitting...' : 'Submit Score' }}
+        </button>
+      </div>
+      <div *ngIf="scoreSubmitted" class="success-message">
+        Score submitted successfully!
+      </div>
+
+      <div class="leaderboard">
+        <h3>Leaderboard</h3>
+        <div *ngFor="let score of leaderboardScores">
+          {{score.playerName}} - {{score.time.toFixed(3)}}s
+        </div>
+      </div>
+      
+      <button (click)="restartGame()" class="try-again-button">Play Again!</button>
+    </div>
+  </div>
+
+  <!-- Game UI (Timer) -->
+  <div class="game-ui" *ngIf="!gameCompleted && gameStarted">
+    <div class="timer">
+      Time: {{gameTime}}.{{gameTimeMs.toString().padStart(3, '0')}}s
+    </div>
+  </div>
+
+  <!-- Persistent Leaderboard -->
+  <div class="in-game-leaderboard">
+    <h3>Top Players</h3>
+    <div *ngFor="let score of leaderboardScores.slice(0, 5)">
+      {{score.playerName}} - {{score.time.toFixed(3)}}s
+    </div>
+  </div>
+
+  <!-- Controls legend -->
+  <div class="controls-legend">
+    <div class="control-key">
+      <div class="key-icon">←</div>
+      <span>Move Left</span>
+    </div>
+    <div class="control-key">
+      <div class="key-icon">→</div>
+      <span>Move Right</span>
+    </div>
+    <div class="control-key">
+      <div class="key-icon">⎵</div>
+      <span>Jump</span>
+    </div>
+  </div>
+</div>
