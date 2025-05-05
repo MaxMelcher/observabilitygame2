@@ -1,3 +1,3 @@
 export const environment = {
-    API: 'https://obs-game.azurewebsites.net/api',
+    API: 'https://obsgame2.azurewebsites.net/api',
 };
